@@ -1,0 +1,14 @@
+{
+  "name": "letatlin",
+  "version": "0.1.0",
+  "description": "A library for configuring your application through etcd",
+  "main": "index.js",
+  "author": "Hugo Wetterberg <hugo@wetterberg.nu>",
+  "license": "MIT",
+  "dependencies": {
+    "minimist": "0.0.8",
+    "node-etcd": "^2.0.10",
+    "async": "^0.2.10",
+    "semver": "^2.2.1"
+  }
+}
