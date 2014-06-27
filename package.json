@@ -1,6 +1,6 @@
 {
   "name": "letatlin",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A library for configuring your application through etcd",
   "main": "index.js",
   "author": "Hugo Wetterberg <hugo@wetterberg.nu>",
@@ -20,7 +20,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "letatlin": "./bin/letatlin.js"
+    "letatlin": "./bin/letatlin"
   },
   "repository": {
     "type": "git",
