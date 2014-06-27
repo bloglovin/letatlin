@@ -6,7 +6,6 @@ var lib = {
   fs: require('fs'),
   path: require('path'),
   async: require('async'),
-  minimist: require('minimist'),
   semver: require('semver'),
   Etcd: require('node-etcd'),
   formats: require('./lib/formats')
@@ -20,19 +19,40 @@ function letatlin(env, options, callback) {
     options = {};
   }
 
-  options.persistConfig = options.persistConfig === undefined ? true : options.persistConfig;
-  options.persistPath = options.persistPath || './environment.config.json';
+  var persistConfig = options.persistConfig === undefined ? true : options.persistConfig;
+  var persistPath = options.persistPath || './environment.config.json';
 
+  letatlin.load(env, options, function loaded(error, values, raw) {
+    if (error) {
+      internal.storedConfigFallback(error, options, env, callback);
+      return;
+    }
+
+    // Persist the raw config if we're configured to do so.
+    if (options.persistConfig) {
+      lib.fs.writeFile(options.persistPath,
+        JSON.stringify(raw, null, '  '),
+        {encoding:'utf8'},
+        function persistResult(error) {
+          if (error) {
+            console.error('Failed to persist configuration', error);
+          }
+        }
+      );
+    }
+
+    callback(null, values);
+  });
+}
+
+letatlin.load = function load(env, options, callback) {
   // The raw key-values from etcd
   var raw = {};
   // Get information on the application that's hosting us
-  // We check for an etcd-flag that tells us to connect to a non-local etcd.
-  var args = lib.minimist(process.argv.slice(2));
-  // And get the package.json info for the application.
   var packageInfo = require(process.cwd() + '/package.json');
 
   // Create an etcd client
-  var url = args.etcd ? lib.url.parse(args.etcd) : {hostname: '127.0.0.1'};
+  var url = options.etcd ? lib.url.parse(options.etcd) : {hostname: '127.0.0.1'};
   var etcd = new lib.Etcd(url.hostname, url.port || 4001);
 
   // Worker function for our config fetcher
@@ -67,31 +87,13 @@ function letatlin(env, options, callback) {
     tasks[name] = lib.async.apply(getConfig, env[name]);
   }
   lib.async.series(tasks, function loadResult(error, values) {
-    if (error) {
-      internal.storedConfigFallback(error, options, env, callback);
-      return;
-    }
-
-    // Persist the raw config if we're configured to do so.
-    if (options.persistConfig) {
-      lib.fs.writeFile(options.persistPath,
-        JSON.stringify(raw, null, '  '),
-        {encoding:'utf8'},
-        function persistResult(error) {
-          if (error) {
-            console.error('Failed to persist configuration', error);
-          }
-        }
-      );
-    }
-
-    callback(null, values);
+    callback(error, values, raw);
   });
-}
+};
 
 // If we fail to read config off etcd we still want to start the application
 // if we have a config on file. This might happen if the process i restarted.
-internal.storedConfigFallback = function (error, options, env, callback) {
+internal.storedConfigFallback = function storedConfigFallback(error, options, env, callback) {
   if (!options.persistConfig) return callback(error);
 
   lib.fs.readFile(options.persistPath,

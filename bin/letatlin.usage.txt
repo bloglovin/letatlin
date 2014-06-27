@@ -1,0 +1,15 @@
+Letatlin cli tool. Can be used to load configuration into etcd or verify that all the needed configuration is in currently in etcd.
+
+Usage:
+  letatlin --help
+  letatlin load <file> [--interactive | --overwrite] [--etcd=<url>]
+  letatlin verify <file> [--etcd=<url>]
+  letatlin verify-amore <base-file> <app-file>
+
+Options:
+  -h --help         Show this screen.
+  --version         Show version.
+  --etcd=<url>      Etcd host [default: http://127.0.0.1:4001]
+  -i --interactive  Interactive loading of values
+  -o --overwrite    Overwrite existing values in etcd
+  -a --amore        Verify the environment for an amore config file

@@ -1,0 +1,47 @@
+#!/usr/bin/env node
+/* jshint node: true */
+'use strict';
+
+var lib = {
+  fs: require('fs'),
+  url: require('url'),
+  path: require('path'),
+  util: require('util'),
+  docopt: require('docopt'),
+  lodash: require('lodash'),
+  errors: require('./cli-errors'),
+  utils: require('./letatlin.utils')
+};
+
+var commands = {
+  verify: require('./letatlin.verify'),
+  load: require('./letatlin.load')
+};
+
+// Parse cli options
+var pkg = require('../package');
+var doc = lib.fs.readFileSync(__dirname + '/letatlin.usage.txt', {encoding:'utf8'});
+var opt = lib.docopt.docopt(doc, {version: pkg.version});
+
+// Load values into etcd
+if (opt.load) {
+  var config = lib.utils.loadJson(opt['<file>']);
+  commands.load(opt).config(config);
+}
+// Verify values
+else if (opt.verify) {
+  var config = lib.utils.loadJson(opt['<file>']);
+  commands.verify(opt).config(config);
+}
+// Verify amore environment
+else if (opt['verify-amore']) {
+  var base = lib.utils.loadJson(opt['<base-file>']);
+  var app = lib.utils.loadJson(opt['<app-file>']);
+  var config = lib.lodash.merge(base, app);
+  commands.verify(opt).amoreEnv(config);
+}
+// Whut?
+else {
+  console.error('Unexpected command');
+  process.exit(lib.errors.UNEXPECTED);
+}
