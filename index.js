@@ -19,8 +19,8 @@ function letatlin(env, options, callback) {
     options = {};
   }
 
-  var persistConfig = options.persistConfig === undefined ? true : options.persistConfig;
-  var persistPath = options.persistPath || './environment.config.json';
+  options.persistConfig = options.persistConfig === undefined ? true : options.persistConfig;
+  options.persistPath = options.persistPath || './environment.config.json';
 
   letatlin.load(env, options, function loaded(error, values, raw) {
     if (error) {
@@ -60,13 +60,16 @@ letatlin.load = function load(env, options, callback) {
     etcd.get(info.key, {
       recursive: !!info.recursive
     }, function getResult(error, result) {
-      if (error) return done(error);
+      if (error) {
+        console.error('Failed to load', info.key, error);
+        return done(error);
+      }
 
       var value;
 
       if (result.node.dir) {
         // Recursively map etcd nodes in a dir to an object.
-        value = internal.dirToObject(result.node, raw);
+        value = letatlin.dirToObject(result.node, raw);
         raw[result.node.key] = value;
       }
       else {
@@ -95,6 +98,9 @@ letatlin.load = function load(env, options, callback) {
 // if we have a config on file. This might happen if the process i restarted.
 internal.storedConfigFallback = function storedConfigFallback(error, options, env, callback) {
   if (!options.persistConfig) return callback(error);
+  if (!lib.fs.existsSync(options.persistPath)) return callback(error);
+
+  console.error('Reading fallback configuration values from', JSON.stringify(options.persistPath));
 
   lib.fs.readFile(options.persistPath,
     {encoding:'utf8'},
@@ -121,7 +127,7 @@ internal.storedConfigFallback = function storedConfigFallback(error, options, en
 };
 
 // Recursively map etcd nodes in a dir to an object.
-internal.dirToObject = function dirToObject(dir) {
+letatlin.dirToObject = function dirToObject(dir) {
   var o = {};
 
   dir.nodes.forEach(function useNode(node) {
