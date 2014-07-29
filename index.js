@@ -7,7 +7,7 @@ var lib = {
   path: require('path'),
   async: require('async'),
   semver: require('semver'),
-  Etcd: require('node-etcd'),
+  Etcd: require('bletcd'),
   formats: require('./lib/formats')
 };
 

@@ -4,7 +4,7 @@
 var lib = {
   url: require('url'),
   readline: require('readline'),
-  Etcd: require('node-etcd'),
+  Etcd: require('bletcd'),
   errors: require('./cli-errors'),
   utils: require('./letatlin.utils')
 };
