@@ -15,9 +15,14 @@
   "directories": {
     "example": "examples"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "istanbul": "^0.3.0",
+    "mocha": "^1.21.3",
+    "mock-fs": "^2.3.1",
+    "nock": "^0.42.2"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- --ui tdd -R spec --inline-diffs"
   },
   "bin": {
     "letatlin": "./bin/letatlin"

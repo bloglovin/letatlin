@@ -37,19 +37,19 @@ function letatlin(env, options, callback) {
           if (error) {
             console.error('Failed to persist configuration', error);
           }
+          callback(error, values);
         }
       );
     }
-
-    callback(null, values);
+    else {
+      callback(null, values);
+    }
   });
 }
 
 letatlin.load = function load(env, options, callback) {
   // The raw key-values from etcd
   var raw = {};
-  // Get information on the application that's hosting us
-  var packageInfo = require(process.cwd() + '/package.json');
 
   // Create an etcd client
   var url = options.etcd ? lib.url.parse(options.etcd) : {hostname: '127.0.0.1'};
