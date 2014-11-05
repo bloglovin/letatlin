@@ -73,7 +73,13 @@ letatlin.load = function load(env, options, callback) {
           key: info.key,
           error: error,
         });
-        return done(error);
+        if (info.optional) {
+          done(null, null);
+        }
+        else {
+          done(error);
+        }
+        return;
       }
 
       var value;
