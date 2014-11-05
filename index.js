@@ -19,6 +19,10 @@ function letatlin(env, options, callback) {
     options = {};
   }
 
+  options.logger = options.logger || function(tags, message) {
+    var log = (tags.indexOf('error') >= 0 ? console.error : console.log).bind(console);
+    log(tags, message);
+  };
   options.persistConfig = options.persistConfig === undefined ? true : options.persistConfig;
   options.persistPath = options.persistPath || './environment.config.json';
 
@@ -35,7 +39,10 @@ function letatlin(env, options, callback) {
         {encoding:'utf8'},
         function persistResult(error) {
           if (error) {
-            console.error('Failed to persist configuration', error);
+            options.logger(['error', 'persist'], {
+              message: 'Failed to persist configuration',
+              error: error,
+            });
           }
           callback(error, values);
         }
@@ -61,7 +68,11 @@ letatlin.load = function load(env, options, callback) {
       recursive: !!info.recursive
     }, function getResult(error, result) {
       if (error) {
-        console.error('Failed to load', info.key, error);
+        options.logger(['error', 'load'], {
+          message: 'Failed to load ' + info.key,
+          key: info.key,
+          error: error,
+        });
         return done(error);
       }
 
@@ -100,7 +111,9 @@ internal.storedConfigFallback = function storedConfigFallback(error, options, en
   if (!options.persistConfig) return callback(error);
   if (!lib.fs.existsSync(options.persistPath)) return callback(error);
 
-  console.error('Reading fallback configuration values from', JSON.stringify(options.persistPath));
+  options.logger(['info', 'fallback'], {
+    message: 'Reading fallback configuration values from ' + JSON.stringify(options.persistPath),
+  });
 
   lib.fs.readFile(options.persistPath,
     {encoding:'utf8'},
