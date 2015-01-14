@@ -26,7 +26,8 @@ etcd.get('/v2/keys/letatlin-test/plain?recursive=false').reply(500, {});
 
 suite('Persist and fall back', function testLoadingAllTypes() {
   var options = {
-    persistPath: 'mock/environment.config.json'
+    persistPath: 'mock/environment.config.json',
+    logger: function() {},
   };
   var config = {
     plain: {key:'/letatlin-test/plain'}
