@@ -59,8 +59,9 @@ letatlin.load = function load(env, options, callback) {
   var raw = {};
 
   // Create an etcd client
-  var url = options.etcd ? lib.url.parse(options.etcd) : {hostname: '127.0.0.1'};
-  var etcd = new lib.Etcd(url.hostname, url.port || 4001);
+  var etcd = lib.Etcd({
+    url: options.etcd,
+  });
 
   // Worker function for our config fetcher
   function getConfig(info, done) {
