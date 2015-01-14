@@ -1,3 +1,11 @@
+### 1.0.1 (2015-01-14)
+
+
+#### Bug Fixes
+
+* **dependency:** update to bletcd ^2.2.0 ([057e442f](https://github.com/bloglovin/letatlin/commit/057e442f5148021b96cbbb5abdec5786b012a4c2))
+
+
 ## 1.0.0 (2014-11-05)
 
 * **chore:** release v1.0.0

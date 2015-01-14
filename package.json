@@ -1,6 +1,6 @@
 {
   "name": "letatlin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A library for configuring your application through etcd",
   "main": "index.js",
   "author": "Hugo Wetterberg <hugo@wetterberg.nu>",
