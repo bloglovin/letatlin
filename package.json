@@ -16,13 +16,18 @@
     "example": "examples"
   },
   "devDependencies": {
+    "grunt": "^0.4.5",
+    "husky": "^0.7.0",
     "istanbul": "^0.3.0",
+    "lintlovin": "^1.15.0",
     "mocha": "^1.21.3",
     "mock-fs": "^2.3.1",
     "nock": "^0.42.2"
   },
   "scripts": {
-    "test": "node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- --ui tdd -R spec --inline-diffs"
+    "test": "node -e \"require('grunt').tasks(['test']);\"",
+    "test-all": "node -e \"require('grunt').tasks(['test-all']);\"",
+    "prepush": "npm test"
   },
   "bin": {
     "letatlin": "./bin/letatlin"

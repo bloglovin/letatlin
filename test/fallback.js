@@ -1,5 +1,5 @@
-/* jshint node: true */
-/*global suite, test, before */
+/* jshint node: true, quotmark: false */
+/*global suite, test */
 'use strict';
 
 var lib = {
@@ -38,7 +38,7 @@ suite('Persist and fall back', function testLoadingAllTypes() {
       'mock': {},
     });
 
-    lib.letatlin(config, options, function loadResult(error, values) {
+    lib.letatlin(config, options, function loadResult(error) {
       if (error) {
         lib.mockfs.restore();
         assert.ifError(error);

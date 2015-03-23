@@ -14,7 +14,7 @@ var lib = {
 var internal = {};
 
 function letatlin(env, options, callback) {
-  if (typeof options == 'function') {
+  if (typeof options === 'function') {
     callback = options;
     options = {};
   }
@@ -115,8 +115,8 @@ letatlin.load = function load(env, options, callback) {
 // If we fail to read config off etcd we still want to start the application
 // if we have a config on file. This might happen if the process i restarted.
 internal.storedConfigFallback = function storedConfigFallback(error, options, env, callback) {
-  if (!options.persistConfig) return callback(error);
-  if (!lib.fs.existsSync(options.persistPath)) return callback(error);
+  if (!options.persistConfig) { return callback(error); }
+  if (!lib.fs.existsSync(options.persistPath)) { return callback(error); }
 
   options.logger(['info', 'fallback'], {
     message: 'Reading fallback configuration values from ' + JSON.stringify(options.persistPath),
@@ -125,7 +125,7 @@ internal.storedConfigFallback = function storedConfigFallback(error, options, en
   lib.fs.readFile(options.persistPath,
     {encoding:'utf8'},
     function readResult(readError, data) {
-      if (readError) return callback(error);
+      if (readError) { return callback(error); }
 
       try {
         var config = {};

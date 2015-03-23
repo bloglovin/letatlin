@@ -1,5 +1,5 @@
-/* jshint node: true */
-/*global suite, test, before */
+/* jshint node: true, quotmark: false */
+/*global suite, test */
 'use strict';
 
 var lib = {

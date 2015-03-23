@@ -19,7 +19,7 @@ var commands = {
 };
 
 // Parse cli options
-var pkg = require('../package');
+var pkg = require('../package.json');
 var doc = lib.fs.readFileSync(__dirname + '/letatlin.usage.txt', {encoding:'utf8'});
 var opt = lib.docopt.docopt(doc, {version: pkg.version});
 

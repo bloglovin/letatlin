@@ -9,7 +9,7 @@ var lib = {
   utils: require('./letatlin.utils')
 };
 
-module.exports = function loadCommands(opt, config) {
+module.exports = function loadCommands(opt) {
   return new Load(opt);
 };
 
@@ -47,7 +47,7 @@ Load.prototype.setKey = function setKey(etcd, key, value, callback) {
     etcd.set(key, value, {prevExist:false}, setDone);
   }
 
-  function setDone(error, result) {
+  function setDone(error) {
     if (error) {
       console.error('Skipped', key + ':', error.message);
     }
